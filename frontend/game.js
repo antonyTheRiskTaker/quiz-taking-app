@@ -17,7 +17,7 @@ let questions = [
     choice2: '4',
     choice3: '21',
     choice4: '17',
-    answer: 2, // referring to the index of the answer?
+    answer: 2, // referring to the index of the answer
   },
   {
     question: 'The tallest building in the world is located in which city?',
@@ -25,7 +25,7 @@ let questions = [
     choice2: 'New York',
     choice3: 'Shanghai',
     choice4: 'None of the above',
-    answer: 1, // referring to the index of the answer?
+    answer: 1, // referring to the index of the answer
   },
   {
     question: 'What percentage of American adults believe that chocolate milk comes from brown cows?',
@@ -33,7 +33,7 @@ let questions = [
     choice2: '18%',
     choice3: '7%',
     choice4: '33%',
-    answer: 3, // referring to the index of the answer?
+    answer: 3, // referring to the index of the answer
   },
   {
     question: 'Approximately what percent of U.S. power outages are caused by squirrels?',
@@ -41,6 +41,6 @@ let questions = [
     choice2: '5% - 10%',
     choice3: '15% - 20%',
     choice4: '30% - 40%',
-    answer: 1, // referring to the index of the answer?
+    answer: 1, // referring to the index of the answer
   },
 ]

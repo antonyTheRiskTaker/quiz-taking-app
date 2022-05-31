@@ -8,13 +8,21 @@ exports.up = function(knex) {
     table.string('username').notNullable();
     table.string('email').notNullable().unique();
     table.string('password').notNullable();
+    table.integer('score').defaultTo(0);
   }).then(() => {
-    return knex.schema.createTable('score', table => {
-      table.integer('user_id').unsigned();
-      table.foreign('user_id').references('users.id');
-      table.integer('user_score').defaultTo(0);
+    return knex.schema.createTable('cs_term', table => {
+      table.increments('id').primary();
+      table.string('term').notNullable();
     })
-  }).then(() => {})
+  }).then(() => {
+    // return knex.schema.createTable('', table => {})
+  }).then(() => {
+    return knex.schema.createTable('cs_question', table => {
+      table.increments('id').primary();
+      table.string('question', 1000).notNullable();
+      table.integer('answer_id')
+    })
+  })
 };
 
 /**

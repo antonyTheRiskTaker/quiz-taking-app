@@ -20,7 +20,7 @@ exports.up = function (knex) {
       table.string('term').notNullable();
     })
   }).then(() => {
-    return knex.schema.createTable('question', table => {
+    return knex.schema.createTable('quiz_question', table => {
       table.increments('id').primary();
       table.string('question', 1000).notNullable();
       table.integer('topic_id').unsigned();
@@ -36,7 +36,7 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('question')
+  return knex.schema.dropTable('quiz_question')
     .then(() => {
       return knex.schema.dropTable('cs_term');
     })

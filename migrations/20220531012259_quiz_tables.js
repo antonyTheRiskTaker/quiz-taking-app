@@ -24,9 +24,9 @@ exports.up = function (knex) {
       table.increments('id').primary();
       table.string('question', 1000).notNullable();
       table.integer('topic_id').unsigned();
-      table.integer('topic_id').references('topic.id');
+      table.foreign('topic_id').references('topic.id');
       table.integer('answer_id').unsigned();
-      table.integer('answer_id').references('cs_term.id');
+      table.foreign('answer_id').references('cs_term.id');
     })
   })
 };

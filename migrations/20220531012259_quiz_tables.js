@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema.createTable('user', table => {
     table.increments('id').primary();
     table.string('username').notNullable();
@@ -10,17 +10,23 @@ exports.up = function(knex) {
     table.string('password').notNullable();
     table.integer('score').defaultTo(0);
   }).then(() => {
+    return knex.schema.createTable('topic', table => {
+      table.increments('id').primary();
+      table.string('topic_name').notNullable();
+    })
+  }).then(() => {
     return knex.schema.createTable('cs_term', table => {
       table.increments('id').primary();
       table.string('term').notNullable();
     })
   }).then(() => {
-    // return knex.schema.createTable('', table => {})
-  }).then(() => {
-    return knex.schema.createTable('cs_question', table => {
+    return knex.schema.createTable('question', table => {
       table.increments('id').primary();
       table.string('question', 1000).notNullable();
-      table.integer('answer_id')
+      table.integer('topic_id').unsigned();
+      table.integer('topic_id').references('topic.id');
+      table.integer('answer_id').unsigned();
+      table.integer('answer_id').references('cs_term.id');
     })
   })
 };
@@ -29,6 +35,15 @@ exports.up = function(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
-  
+exports.down = function (knex) {
+  return knex.schema.dropTable('question')
+    .then(() => {
+      return knex.schema.dropTable('cs_term');
+    })
+    .then(() => {
+      return knex.schema.dropTable('topic');
+    })
+    .then(() => {
+      return knex.schema.dropTable('user');
+    });
 };

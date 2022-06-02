@@ -27,7 +27,7 @@ const knex = require('knex')(knexFile);
 app.use(passport.initialize());
 app.use(passport.session());
 
-const bcrypt = require('./bcrypt.js');
+const bcrypt = require('./passport/bcrypt.js');
 
 const LocalStrategy = require('passport-local').Strategy;
 

@@ -12,7 +12,7 @@ const app = express();
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
     secret: process.env.SECRET,
@@ -24,16 +24,113 @@ app.use(
 const knexFile = require('./knexfile').development;
 const knex = require('knex')(knexFile);
 
-// About to set up auth routers (continue from HERE!!)
+app.use(passport.initialize());
+app.use(passport.session());
 
+const LocalStrategy = require('passport-local').Strategy;
+
+
+// Passport
+passport.use(
+  'local-login',
+  new LocalStrategy(async (email, password, done) => {
+    try {
+      let users = await knex('users').where({ email: email });
+      if (users.length == 0) {
+        return done(null, false);
+      }
+
+      let user = users[0];
+      let result = await knex('users')
+        .where({ password: password })
+        .where({ email: email });
+      if (result) {
+        return done(null, user);
+      }
+      return done(null, false);
+    } catch (err) {
+      if (err) {
+        done(err);
+      }
+    }
+  })
+);
+
+// Need to add username as well (check https://stackoverflow.com/questions/28760101/nodejs-passport-how-to-add-more-user-information)
+passport.use(
+  'local-signup',
+  new LocalStrategy(async (email, password, done) => {
+    try {
+      let users = await knex('users').where({ email: email });
+      if (users.length > 0) {
+        return done(null, false, { message: 'Email in use' });
+      }
+
+      const newUser = {
+        email: email,
+        password: password,
+      };
+
+      let userID = await knex('users').insert(newUser).returning('id');
+      newUser.id = userID;
+      done(null, newUser);
+    } catch (err) {
+      done(err);
+    }
+  })
+);
+
+// Serialize & deserialize - border control
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+// Protect your route handlers - middleware function on our routes
+
+function isLoggedIn(req, res, next) {
+  console.log(req);
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+}
+
+// Routes
 app.get('/', (req, res) => {
   res.render('home');
 });
 
+app.get('/error', (req, res) => {
+  res.render('error');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.get('/signup', (req, res) => {
+  res.render('signup');
+});
+
 // (Lines below) in case you want to use a different template in the layouts folder, add { layout: example } next to 'game
-app.get('/game', (req, res) => {
+app.get('/game', isLoggedIn, (req, res) => {
   res.render('game');
 });
+
+// passport req/res
+app.post('/login', passport.authenticate('local-login', {
+  successRedirect: '/game',
+  failureRedirect: '/error'
+}));
+
+app.post('/signup', passport.authenticate('local-signup', {
+  successRedirect: '/login',
+  failureRedirect: '/error'
+}));
 
 app.listen(3000, () => {
   console.log('Listening to port 3000');

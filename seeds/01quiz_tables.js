@@ -8,9 +8,9 @@
   await knex('cs_term').del()
   await knex('topic').del()
   await knex('users').del()
-  await knex('users').insert([
-    {id: 1, email: 'loidforger@gmail.com', password: 'OpEr@TiOnStRyX', score: 0}
-  ])
+  // await knex('users').insert([
+  //   {id: 1, email: 'loidforger@gmail.com', password: 'OpEr@TiOnStRyX', score: 0}
+  // ])
   await knex('topic').insert([
     {id: 1, topic_name: 'computer science'}
   ])

@@ -27,8 +27,9 @@ const knex = require('knex')(knexFile);
 app.use(passport.initialize());
 app.use(passport.session());
 
-const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('./bcrypt.js');
 
+const LocalStrategy = require('passport-local').Strategy;
 
 // Passport
 passport.use(
@@ -41,9 +42,10 @@ passport.use(
       }
 
       let user = users[0];
-      let result = await knex('users')
-        .where({ password: password })
-        .where({ email: email });
+      // let result = await knex('users')
+      //   .where({ password: password })
+      //   .where({ email: email });
+      let result = await bcrypt.checkPassword(password, user.password);
       if (result) {
         return done(null, user);
       }
@@ -66,9 +68,10 @@ passport.use(
         return done(null, false, { message: 'Email in use' });
       }
 
+      let hash = await bcrypt.hashPassword(password)
       const newUser = {
         email: email,
-        password: password,
+        password: hash,
       };
 
       let userID = await knex('users').insert(newUser).returning('id');
@@ -92,7 +95,7 @@ passport.deserializeUser((user, done) => {
 // Protect your route handlers - middleware function on our routes
 
 function isLoggedIn(req, res, next) {
-  console.log(req);
+  // console.log(req);
   if (req.isAuthenticated()) {
     return next();
   }
@@ -131,6 +134,15 @@ app.post('/signup', passport.authenticate('local-signup', {
   successRedirect: '/login',
   failureRedirect: '/error'
 }));
+
+app.get('/logout', (req, res, next) => {
+  req.logout(err => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('login');
+  });
+});
 
 app.listen(3000, () => {
   console.log('Listening to port 3000');

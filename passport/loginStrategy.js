@@ -6,16 +6,13 @@ const LocalStrategy = require('passport-local').Strategy;
 
 module.exports = new LocalStrategy(async (email, password, done) => {
   try {
-    let users = await knex('users').where({ email: email });
+    let users = await knex(TABLE_NAME).where({ email: email });
     if (users.length == 0) {
       return done(null, false);
     }
 
     let user = users[0];
-    // let result = await knex('users')
-    //   .where({ password: password })
-    //   .where({ email: email });
-    let result = await bcrypt.checkPassword(password, user.password);
+    let result = await hashFunction.checkPassword(password, user.password);
     if (result) {
       return done(null, user);
     }

@@ -1,5 +1,5 @@
 const express = require('express');
-const isLoggedIn = require('../authFuncs/auth.js').isLoggedIn;
+const isLoggedIn = require('../authFuncs/auth.js');
 
 class ViewRouter {
   router() {

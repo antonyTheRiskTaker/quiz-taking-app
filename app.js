@@ -119,14 +119,14 @@ app.get('/signup', (req, res) => {
   res.render('signup');
 });
 
-// (Lines below) in case you want to use a different template in the layouts folder, add { layout: example } next to 'game
-app.get('/game', isLoggedIn, (req, res) => {
-  res.render('game');
+// (Lines below) in case you want to use a different template in the layouts folder, add { layout: example } next to 'quiz'
+app.get('/quiz', isLoggedIn, (req, res) => {
+  res.render('quiz');
 });
 
 // passport req/res
 app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/game',
+  successRedirect: '/quiz',
   failureRedirect: '/error'
 }));
 

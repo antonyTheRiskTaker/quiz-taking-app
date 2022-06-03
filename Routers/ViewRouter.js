@@ -33,8 +33,10 @@ class ViewRouter {
     try {
       const terms = await knex.select('*').from(TERM_TABLE_NAME);
       const questions = await knex.select('*').from(QUESTION_TABLE_NAME);
+      const shuffledQuestions = questions.sort(() => Math.random() - .5);
+      const questionsWithOptions = shuffledQuestions.forEach(q => {});
       console.log(terms);
-      console.log(questions);
+      console.log(shuffledQuestions);
     } catch (error) {
       console.log(error);
     }

@@ -33,10 +33,30 @@ class ViewRouter {
     try {
       const terms = await knex.select('*').from(TERM_TABLE_NAME);
       const questions = await knex.select('*').from(QUESTION_TABLE_NAME);
+      const shuffledTerms = terms.sort(() => Math.random() - .5);
       const shuffledQuestions = questions.sort(() => Math.random() - .5);
-      const questionsWithOptions = shuffledQuestions.forEach(q => {});
-      console.log(terms);
+      shuffledQuestions.forEach(q => {
+        q.answers = [];
+        // (Line below) add the correct answer object to the answers array
+        for (const term of terms) {
+          if (term.id === q.answer_id) {
+            q.answers.push(term);
+          }
+        }
+
+        const filteredShuffledTerms = shuffledTerms.filter(term => term.id !== q.answer_id);
+        
+        for (let i = 0; i < 3; i++) {
+          q.answers.push(filteredShuffledTerms[i]);
+        }
+
+        q.answers.sort(() => Math.random() - .5);
+      });
+      console.log(shuffledTerms);
       console.log(shuffledQuestions);
+      console.log(shuffledQuestions[0]);
+      console.log(shuffledQuestions[1]);
+      // continue from here!
     } catch (error) {
       console.log(error);
     }

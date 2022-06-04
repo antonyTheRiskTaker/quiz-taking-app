@@ -6,10 +6,14 @@ const session = require('express-session');
 // const passport = require('passport');
 const app = express();
 
+const isLoggedIn = require('./authFuncs/auth.js');
+
 const AuthRouter = require('./Routers/AuthRouter');
-const authRouter = new AuthRouter();
+const ViewService = require('./Services/ViewService');
 const ViewRouter = require('./Routers/ViewRouter');
-const viewRouter = new ViewRouter();
+const authRouter = new AuthRouter();
+const viewService = new ViewService()
+const viewRouter = new ViewRouter(express, isLoggedIn, viewService);
 
 // (Line below) only include if you want to style handlebars pages using css and remember to add a public folder
 // app.use(express.static('public')) 

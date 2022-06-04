@@ -31,10 +31,10 @@ class ViewRouter {
 
   async getQuiz(req, res) {
     try {
-      const terms = await knex.select('*').from(TERM_TABLE_NAME);
-      const questions = await knex.select('*').from(QUESTION_TABLE_NAME);
-      const shuffledTerms = terms.sort(() => Math.random() - .5);
-      const shuffledQuestions = questions.sort(() => Math.random() - .5);
+      // const terms = await knex.select('*').from(TERM_TABLE_NAME);
+      // const questions = await knex.select('*').from(QUESTION_TABLE_NAME);
+      // const shuffledTerms = terms.sort(() => Math.random() - .5);
+      // const shuffledQuestions = questions.sort(() => Math.random() - .5);
       shuffledQuestions.forEach(q => {
         q.answers = [];
         // (Line below) add the correct answer object to the answers array

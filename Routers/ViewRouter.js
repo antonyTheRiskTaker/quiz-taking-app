@@ -43,7 +43,13 @@ class ViewRouter {
   }
 
   getDashboard(req, res) {
-    res.render('dashboard');
+    try {
+      console.log(req); // test it!
+      return this.viewService.getDashboard(req.user[0])
+        .then(userInfo => res.render('dashboard', { userInfo: userInfo }));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   getError(req, res) {

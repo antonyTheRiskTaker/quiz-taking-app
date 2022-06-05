@@ -44,9 +44,11 @@ class ViewRouter {
 
   getDashboard(req, res) {
     try {
-      console.log(req); // test it!
-      return this.viewService.getDashboard(req.user[0])
-        .then(userInfo => res.render('dashboard', { userInfo: userInfo }));
+      return this.viewService.getDashboard(req.user)
+        .then(userInfo => {
+          // userInfo is an array containing info of a single logged-in user, therefore: userInfo[0]
+          res.render('dashboard', { userInfo: userInfo[0] });
+        });
     } catch (error) {
       console.log(error);
     }

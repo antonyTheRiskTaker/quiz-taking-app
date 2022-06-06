@@ -8,7 +8,7 @@ const USER_TABLE_NAME = 'users';
 
 class ViewService {
 
-  async getQuiz() {
+  async getQuizData() {
     const terms = await knex.select('*').from(TERM_TABLE_NAME);
     const questions = await knex.select('*').from(QUESTION_TABLE_NAME);
     return formatQuestions(questions, terms, insertAnswers);

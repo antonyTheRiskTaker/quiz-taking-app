@@ -11,6 +11,7 @@ class ViewRouter {
     router.get('/login', this.getLogin.bind(this));
     router.get('/signup', this.getSignup.bind(this));
     router.get('/quiz', this.isLoggedIn, this.getQuiz.bind(this));
+    router.get('/quizdata', this.isLoggedIn, this.getQuizData.bind(this));
     router.get('/dashboard', this.isLoggedIn, this.getDashboard.bind(this));
     router.get('/error', this.getError.bind(this));
     return router;
@@ -28,14 +29,18 @@ class ViewRouter {
     res.render('signup');
   }
 
-  getQuiz(req, res) { // Work on injecting quiz ui & logic
+  getQuiz(req, res) {
+    res.render('quiz', { layout: 'quizfront' });
+  }
+
+  getQuizData(req, res) {
     try {
       return this.viewService.getQuiz()
         .then(questions => {
           // for (const question of questions) {
           //   console.log(question);
           // }
-          res.render('quiz', { questionData: questions });
+          res.json(questions);
         });
     } catch (error) {
       console.log(error);

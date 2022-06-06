@@ -1,4 +1,9 @@
+const { default: axios } = require("axios");
+
 const startButton = document.getElementById('start-btn');
+// console.log('Vanilla JS:', startButton);
+// const $startButton = $('#start-btn');
+// console.log('jQuery:', $startButton[0]);
 const nextButton = document.getElementById('next-btn');
 const questionContainerElement = document.getElementById('question-container');
 const questionElement = document.getElementById('question');
@@ -12,6 +17,9 @@ nextButton.addEventListener('click', () => {
   setNextQuestion();
 })
 
+function getQuizData() {
+  axios.get('') // continue from here!
+}
 
 function startGame() {
   // Essentially what we want to do when we click the start button.

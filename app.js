@@ -15,10 +15,13 @@ const viewService = new ViewService()
 const viewRouter = new ViewRouter(express, isLoggedIn, viewService);
 
 // Include to style handlebars pages using css
-app.use(express.static('public')) 
+app.use(express.static('public'));
 
 // To add JS scripts in express-handlebars from view, visit https://stackoverflow.com/questions/40386257/add-scripts-in-express-handlebars-from-view
-app.engine('handlebars', engine());
+app.engine('handlebars', engine({
+  layoutsDir: `${__dirname}/views/layouts`,
+  defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

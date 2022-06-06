@@ -35,13 +35,8 @@ class ViewRouter {
 
   getQuizData(req, res) {
     try {
-      return this.viewService.getQuiz()
-        .then(questions => {
-          // for (const question of questions) {
-          //   console.log(question);
-          // }
-          res.json(questions);
-        });
+      return this.viewService.getQuizData()
+        .then(questions => res.json(questions));
     } catch (error) {
       console.log(error);
     }

@@ -1,5 +1,4 @@
-const { default: axios } = require("axios");
-
+const body = document.getElementsByTagName('body');
 const startButton = document.getElementById('start-btn');
 // console.log('Vanilla JS:', startButton);
 // const $startButton = $('#start-btn');
@@ -9,6 +8,8 @@ const questionContainerElement = document.getElementById('question-container');
 const questionElement = document.getElementById('question');
 const answerButtonsElement = document.getElementById('answer-buttons');
 
+const QUIZAPPURL = 'http://localhost:3000';
+
 let shuffledQuestions, currentQuestionIndex;
 
 startButton.addEventListener('click', startGame);
@@ -17,17 +18,32 @@ nextButton.addEventListener('click', () => {
   setNextQuestion();
 })
 
-function getQuizData() {
-  axios.get('') // continue from here!
+async function getQuizData() {
+  return await axios.get(`${QUIZAPPURL}/quizdata`)
+    .then(res => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err);
+    }) ;
+  // try {
+  //   const res = await axios.get(`${QUIZAPPURL}/quizdata`);
+  //   const quizData = await res.data;
+  //   console.log(quizData);
+  //   return quizData;
+  // } catch (err) {
+  //   console.log(err);
+  // }
 }
 
-function startGame() {
+async function startGame() {
   // Essentially what we want to do when we click the start button.
   console.log('Started');
   startButton.classList.add('hide'); // The start button disappears.
-  // (Line below) Math.random() - .5 will give a result that is either above or below zero 50% of the time. sort() will sort an array in one way or other depending on whether it's passed a postive or negative number.
-  shuffledQuestions = questions.sort(() => Math.random() - .5);
+  shuffledQuestions = await getQuizData();
   currentQuestionIndex = 0;
+  console.log(shuffledQuestions); // continue from here!
   // (Line below) Make the question container visible.
   questionContainerElement.classList.remove('hide');
   setNextQuestion();
@@ -46,11 +62,11 @@ function showQuestion(question) { // question refers to a single question object
   questionElement.innerText = question.question;
   question.answers.forEach(answer => {
     const button = document.createElement('button');
-    button.innerText = answer.text;
+    button.innerText = answer.term;
     button.classList.add('btn');
-    if (answer.correct) {
+    if (answer.id === question.answer_id) {
       // (Line below) add a data attribute on to the button element
-      button.dataset.correct = answer.correct;
+      button.dataset.correct = true; // continue from here, also store api-called questions in a variable
     }
     button.addEventListener('click', selectAnswer);
     answerButtonsElement.appendChild(button);

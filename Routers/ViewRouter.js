@@ -28,7 +28,7 @@ class ViewRouter {
     res.render('signup');
   }
 
-  getQuiz(req, res) {
+  getQuiz(req, res) { // Work on injecting quiz ui & logic
     try {
       return this.viewService.getQuiz()
         .then(questions => {

@@ -58,6 +58,15 @@ class ViewRouter {
   getError(req, res) {
     res.render('error');
   }
+
+  updateUserScore(req, res) {
+    // console.log(req.body);
+    const userId = req.session.passport.user.id;
+    const quizScore = req.body.finalScore;
+    // console.log(`Game finished, userid: ${userId}`);
+    // console.log(`Final score: ${quizScore}`);
+    // this.viewService.updateUserScore()
+  }
 }
 
 module.exports = ViewRouter;

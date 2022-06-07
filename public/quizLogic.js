@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-
 const body = document.getElementsByTagName('body');
 const startButton = document.getElementById('start-btn');
 // console.log('Vanilla JS:', startButton);
@@ -12,7 +10,7 @@ const answerButtonsElement = document.getElementById('answer-buttons');
 
 const QUIZAPPURL = 'http://localhost:3000';
 
-let shuffledQuestions, currentQuestionIndex, currentScore;
+let shuffledQuestions, currentQuestionIndex, quizScore;
 
 startButton.addEventListener('click', startGame);
 nextButton.addEventListener('click', () => {
@@ -28,7 +26,7 @@ async function getQuizData() {
     })
     .catch(err => {
       console.log(err);
-    }) ;
+    });
 }
 
 async function startGame() {
@@ -37,7 +35,7 @@ async function startGame() {
   startButton.classList.add('hide'); // The start button disappears.
   shuffledQuestions = await getQuizData(); // Questions are shuffled on the BE.
   currentQuestionIndex = 0;
-  currentScore = 0;
+  quizScore = 0;
   // (Line below) Make the question container visible.
   questionContainerElement.classList.remove('hide');
   setNextQuestion();
@@ -77,11 +75,11 @@ function resetState() {
 }
 
 function selectAnswer(e) {
-  console.log(e);
+  // console.log(e);
   const selectedButton = e.target;
   const correct = selectedButton.dataset.correct; // A truthy or falsy value
-  console.log(correct);
-  currentScore += (correct) ? 1 : 0;
+  // console.log(correct);
+  quizScore += (correct) ? 1 : 0;
   // (Line below) depending on the value, the background turns green or red.
   setStatusClass(document.body, correct);
   Array.from(answerButtonsElement.children).forEach(button => {
@@ -90,20 +88,29 @@ function selectAnswer(e) {
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide');
   } else {
-    alert(`Your final score: ${currentScore}`);
+    alert(`Your final score: ${quizScore}`);
     // Call a function to make http post request to update the user's score on the backend
+    updateScoreToBackend(quizScore);
     startButton.innerText = 'Restart';
     startButton.classList.remove('hide')
   }
 }
 
-function updateScoreToBackend() {
-  axios.post(`${QUIZAPPURL}/userscore`).then().catch()
-} // Continue from here!
+function updateScoreToBackend(quizScore) {
+  const finalScore = { finalScore: quizScore };
+  axios.post(`${QUIZAPPURL}/userscore`, finalScore)
+    .then(res => {
+      console.log('Success');
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
 
 function setStatusClass(element, correct) {
   // (Line below) make the element a clean slate by removing correct and wrong classes.
-  clearStatusClass(element); 
+  clearStatusClass(element);
   if (correct) {
     element.classList.add('correct');
   } else {

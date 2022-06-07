@@ -60,12 +60,21 @@ class ViewRouter {
   }
 
   updateUserScore(req, res) {
-    // console.log(req.body);
-    const userId = req.session.passport.user.id;
+    // const userInfo = req.user;
+    // const userSession = req.session.passport.user;
+    // console.log('User info from req.user:', userInfo);
+    // console.log('User info from req.session:', userSession);
+    const userId = req.user.id;
+    const currentScore = req.user.score;
     const quizScore = req.body.finalScore;
-    // console.log(`Game finished, userid: ${userId}`);
-    // console.log(`Final score: ${quizScore}`);
-    // this.viewService.updateUserScore()
+    return this.viewService
+      .updateUserScore(userId, currentScore, quizScore)
+      .then(user => {
+        console.log(user);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 }
 

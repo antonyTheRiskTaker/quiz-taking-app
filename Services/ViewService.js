@@ -21,16 +21,14 @@ class ViewService {
     return userInfo;
   }
 
-  async updateUserScore(userId, data) {
+  async updateUserScore(userId, currentScore, quizScore) {
     // (Lines below) first, get the current score from the user and return it.
-    const userCurrentScore = await knex
-      .select('score')
-      .from(USER_TABLE_NAME)
-      .where('id', user.id);
-    console.log(`User id ${user.id}'s current score: ${userCurrentScore}`);
-    // (Line below) combine current score and latest update
-    const updatedScore = userCurrentScore + data;
-    return updatedScore;
+    const newScore = currentScore + quizScore;
+    const updated = await knex(USER_TABLE_NAME)
+      .update({ score: newScore })
+      .where({ id: userId })
+      .returning('*');
+    return updated;
   }
 }
 

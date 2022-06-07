@@ -20,6 +20,18 @@ class ViewService {
       .where({ id: user.id });
     return userInfo;
   }
+
+  async updateUserScore(user, data) {
+    // (Lines below) first, get the current score from the user and return it.
+    const userCurrentScore = await knex
+      .select('score')
+      .from(USER_TABLE_NAME)
+      .where('id', user.id);
+    console.log(`User id ${user.id}'s current score: ${userCurrentScore}`);
+    // (Line below) combine current score and latest update
+    const updatedScore = userCurrentScore + data;
+    return updatedScore;
+  }
 }
 
 module.exports = ViewService;

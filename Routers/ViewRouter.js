@@ -10,10 +10,11 @@ class ViewRouter {
     router.get('/', this.getHome.bind(this));
     router.get('/login', this.getLogin.bind(this));
     router.get('/signup', this.getSignup.bind(this));
+    router.get('/error', this.getError.bind(this));
+    router.get('/dashboard', this.isLoggedIn, this.getDashboard.bind(this));
     router.get('/quiz', this.isLoggedIn, this.getQuiz.bind(this));
     router.get('/quizdata', this.isLoggedIn, this.getQuizData.bind(this));
-    router.get('/dashboard', this.isLoggedIn, this.getDashboard.bind(this));
-    router.get('/error', this.getError.bind(this));
+    router.post('/userscore', this.isLoggedIn, this.updateUserScore.bind(this));
     return router;
   }
 

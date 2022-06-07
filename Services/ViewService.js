@@ -21,7 +21,7 @@ class ViewService {
     return userInfo;
   }
 
-  async updateUserScore(user, data) {
+  async updateUserScore(userId, data) {
     // (Lines below) first, get the current score from the user and return it.
     const userCurrentScore = await knex
       .select('score')

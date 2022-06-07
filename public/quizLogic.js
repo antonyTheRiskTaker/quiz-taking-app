@@ -43,7 +43,7 @@ async function startGame() {
   startButton.classList.add('hide'); // The start button disappears.
   shuffledQuestions = await getQuizData();
   currentQuestionIndex = 0;
-  console.log(shuffledQuestions); // continue from here!
+  console.log(shuffledQuestions);
   // (Line below) Make the question container visible.
   questionContainerElement.classList.remove('hide');
   setNextQuestion();

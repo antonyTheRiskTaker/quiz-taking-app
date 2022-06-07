@@ -11,6 +11,7 @@ const answerButtonsElement = document.getElementById('answer-buttons');
 const QUIZAPPURL = 'http://localhost:3000';
 
 let shuffledQuestions, currentQuestionIndex;
+// let score; // To be uncommented later
 
 startButton.addEventListener('click', startGame);
 nextButton.addEventListener('click', () => {
@@ -27,22 +28,15 @@ async function getQuizData() {
     .catch(err => {
       console.log(err);
     }) ;
-  // try {
-  //   const res = await axios.get(`${QUIZAPPURL}/quizdata`);
-  //   const quizData = await res.data;
-  //   console.log(quizData);
-  //   return quizData;
-  // } catch (err) {
-  //   console.log(err);
-  // }
 }
 
 async function startGame() {
   // Essentially what we want to do when we click the start button.
   console.log('Started');
   startButton.classList.add('hide'); // The start button disappears.
-  shuffledQuestions = await getQuizData();
+  shuffledQuestions = await getQuizData(); // Questions are shuffled on the BE.
   currentQuestionIndex = 0;
+  // score = 0;
   console.log(shuffledQuestions);
   // (Line below) Make the question container visible.
   questionContainerElement.classList.remove('hide');
@@ -66,7 +60,7 @@ function showQuestion(question) { // question refers to a single question object
     button.classList.add('btn');
     if (answer.id === question.answer_id) {
       // (Line below) add a data attribute on to the button element
-      button.dataset.correct = true; // continue from here, also store api-called questions in a variable
+      button.dataset.correct = true;
     }
     button.addEventListener('click', selectAnswer);
     answerButtonsElement.appendChild(button);
@@ -83,9 +77,13 @@ function resetState() {
 }
 
 function selectAnswer(e) {
-  // What does it do?
+  console.log(e);
   const selectedButton = e.target;
-  const correct = selectedButton.dataset.correct;
+  const correct = selectedButton.dataset.correct; // A truthy or falsy value
+
+  // Maybe an if-else block to determine if the user scores depending the correct value of the element selected
+
+  // (Line below) depending on the value, the background turns green or red.
   setStatusClass(document.body, correct);
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct);
@@ -93,13 +91,18 @@ function selectAnswer(e) {
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide');
   } else {
+    // Call alert() to inform the user's score
+    // Call a function to make http post request to update the user's score on the backend
     startButton.innerText = 'Restart';
     startButton.classList.remove('hide')
   }
 }
 
+// function updateScoreToBackend() {}
+
 function setStatusClass(element, correct) {
-  clearStatusClass(element);
+  // (Line below) make the element a clean slate by removing correct and wrong classes.
+  clearStatusClass(element); 
   if (correct) {
     element.classList.add('correct');
   } else {
@@ -111,43 +114,3 @@ function clearStatusClass(element) {
   element.classList.remove('correct');
   element.classList.remove('wrong');
 }
-
-// This array serves as a question database but we need to shuffle the questions because we don't want to show our questions in the exact same order.
-const questions = [
-  {
-    question: 'en colère',
-    answers: [
-      { text: 'airport', correct: false },
-      { text: 'angry', correct: true },
-      { text: 'always', correct: false },
-      { text: 'after', correct: false },
-    ]
-  },
-  {
-    question: 'fourmi',
-    answers: [
-      { text: 'ant', correct: true },
-      { text: 'ankle', correct: false },
-      { text: 'alcohol', correct: false },
-      { text: 'art', correct: false },
-    ]
-  },
-  {
-    question: 'bar',
-    answers: [
-      { text: 'basement', correct: false },
-      { text: 'bar', correct: true },
-      { text: 'back', correct: false },
-      { text: 'bed', correct: false },
-    ]
-  },
-  {
-    question: 'oiseau',
-    answers: [
-      { text: 'bedroom', correct: false },
-      { text: 'bonus', correct: false },
-      { text: 'bitter', correct: false },
-      { text: 'bird', correct: true },
-    ]
-  }
-]

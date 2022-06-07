@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 const body = document.getElementsByTagName('body');
 const startButton = document.getElementById('start-btn');
 // console.log('Vanilla JS:', startButton);
@@ -10,8 +12,7 @@ const answerButtonsElement = document.getElementById('answer-buttons');
 
 const QUIZAPPURL = 'http://localhost:3000';
 
-let shuffledQuestions, currentQuestionIndex;
-// let score; // To be uncommented later
+let shuffledQuestions, currentQuestionIndex, currentScore;
 
 startButton.addEventListener('click', startGame);
 nextButton.addEventListener('click', () => {
@@ -36,8 +37,7 @@ async function startGame() {
   startButton.classList.add('hide'); // The start button disappears.
   shuffledQuestions = await getQuizData(); // Questions are shuffled on the BE.
   currentQuestionIndex = 0;
-  // score = 0;
-  console.log(shuffledQuestions);
+  currentScore = 0;
   // (Line below) Make the question container visible.
   questionContainerElement.classList.remove('hide');
   setNextQuestion();
@@ -80,9 +80,8 @@ function selectAnswer(e) {
   console.log(e);
   const selectedButton = e.target;
   const correct = selectedButton.dataset.correct; // A truthy or falsy value
-
-  // Maybe an if-else block to determine if the user scores depending the correct value of the element selected
-
+  console.log(correct);
+  currentScore += (correct) ? 1 : 0;
   // (Line below) depending on the value, the background turns green or red.
   setStatusClass(document.body, correct);
   Array.from(answerButtonsElement.children).forEach(button => {
@@ -91,14 +90,16 @@ function selectAnswer(e) {
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide');
   } else {
-    // Call alert() to inform the user's score
+    alert(`Your final score: ${currentScore}`);
     // Call a function to make http post request to update the user's score on the backend
     startButton.innerText = 'Restart';
     startButton.classList.remove('hide')
   }
 }
 
-// function updateScoreToBackend() {}
+function updateScoreToBackend() {
+  axios.post(`${QUIZAPPURL}/userscore`).then().catch()
+} // Continue from here!
 
 function setStatusClass(element, correct) {
   // (Line below) make the element a clean slate by removing correct and wrong classes.

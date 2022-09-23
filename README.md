@@ -1,6 +1,6 @@
 # Steps to follow to make the quiz app work after cloning:
 1. Install npm packages
-2. Create .env file
+2. Create a .env file
 3. Make sure the .env file has all the necessary info:
     I. DB_NAME
     II. DB_USERNAME

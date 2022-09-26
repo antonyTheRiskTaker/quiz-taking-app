@@ -5,7 +5,7 @@ const { engine } = require('express-handlebars');
 const session = require('express-session');
 const app = express();
 
-const port = `0.0.0.0:$PORT`;
+const port = process.env.PORT || 3000;
 
 const isLoggedIn = require('./authFuncs/auth.js');
 

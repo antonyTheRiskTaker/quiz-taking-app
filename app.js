@@ -5,6 +5,8 @@ const { engine } = require('express-handlebars');
 const session = require('express-session');
 const app = express();
 
+const port = `0.0.0.0:$PORT`;
+
 const isLoggedIn = require('./authFuncs/auth.js');
 
 const AuthRouter = require('./Routers/AuthRouter');
@@ -39,8 +41,8 @@ app.use(passportFunctions.session());
 app.use('/', authRouter.router());
 app.use('/', viewRouter.router());
 
-app.listen(3000, () => {
-  console.log('Listening to port 3000');
+app.listen(port, () => {
+  console.log(`Listening to port ${port}`);
 });
 
 // const bcrypt = require('./passport/bcrypt.js');
